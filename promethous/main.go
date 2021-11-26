@@ -2,6 +2,7 @@ package main
 
 // https://pkg.go.dev/github.com/prometheus/client_golang/prometheus#example-CounterVec
 import (
+	"fmt"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/shirou/gopsutil/mem"
@@ -41,12 +42,12 @@ var (
 		Help:       "the relationship between salary and population of beijing city",
 		Objectives: map[float64]float64{0.5: 0.05, 0.8: 0.01, 0.9: 0.01, 0.95: 0.001},
 	})
-	// beijing_salary  beijing_salary_count  beijing_salary_sum
+	// beijing_salary  beijing_salary_count  beijing_salary_sum  横着请求数  纵请求时间
 
 	TemperatureHistogram = prometheus.NewHistogram(prometheus.HistogramOpts{
-		Name:    "beijing_temperature",
+		Name:    "beijing_temperature_second",
 		Help:    "The temperature of the beijing",
-		Buckets: prometheus.LinearBuckets(0, 10, 3),
+		Buckets: prometheus.LinearBuckets(0, 2, 2),
 	})
 	// beijing_histogram_bucket  beijing_histogram_count  beijing_histogram_sum
 )
@@ -78,7 +79,7 @@ func main() {
 
 	for {
 		v, err := mem.VirtualMemory()
-		logger.Println("memory----", v)
+		logger.Println("memory----", v.UsedPercent)
 		if err != nil {
 			logger.Println("get memeory use percent error:%s", err)
 		}
@@ -97,12 +98,14 @@ func main() {
 		httpReqs.WithLabelValues("200", "GET").Inc()
 
 		time.Sleep(time.Second * 2)
-
-		TemperatureHistogram.Observe(v.UsedPercent)
+		//
 		// 百度案列
-		//var temperature = [10]float64{1, 4, 5, 10, 14, 15, 20, 25, 11, 30}
+		var temperature = [10]float64{1,1.1,1.2,1.3,1.4,0.07,0.09,0.9,2.5,0.5}
+		historical := rand.Intn(8)
+		TemperatureHistogram.Observe(temperature[historical])
+		fmt.Printf("insert number: %f \n", temperature[historical])
 		//for i := 0; i < len(temperature); i++ {
-		//fmt.Printf("insert number: %f \n", temperature[i])
+			//fmt.Printf("insert number: %f \n", temperature[i])
 		//}
 	}
 
