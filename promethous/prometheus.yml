@@ -18,4 +18,4 @@ scrape_configs:
   - job_name: 'memory'
     scrape_interval: 5s
     static_configs:
-      - targets: [ 'docker.for.mac.host.internal:8973']
+      - targets: ['docker.for.mac.host.internal:8973']
