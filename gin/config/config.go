@@ -27,7 +27,7 @@ func NewConfig() {
 	//设置读取的配置文件
 	vp.SetConfigName("config.yaml")
 	//添加读取的配置文件路径
-	vp.AddConfigPath("./config")
+	vp.AddConfigPath("./")
 	//设置配置文件类型
 	vp.SetConfigType("yaml")
 	// 配置文件名称(无扩展名)
@@ -69,7 +69,7 @@ func redis(vp *viper.Viper) *Redis {
 func system(vp *viper.Viper) *System {
 	redis := &System{
 		Env:          vp.GetString("system.env"),
-		Addr:         vp.GetInt("system.addr"),
+		Addr:         vp.GetString("system.addr"),
 		DbType:       vp.GetString("system.dbType"),
 		OssType:      vp.GetString("system.ossType"),
 		LimitCountIP: vp.GetInt("system.ipLimitCount"),

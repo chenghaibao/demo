@@ -7,21 +7,23 @@ import (
 	routeIndex "hb_gin/route/index"
 )
 
+var Gin *gin.Engine
+
 type RouterGroup struct {
 	Admin routeAdmin.AdminRouter
 	Index routeIndex.IndexRouter
 }
 
 func Routers() *gin.Engine {
-	gin := gin.Default()
+	Gin = gin.Default()
 	RouterGroupApp := new(RouterGroup)
-	gin.Use(middleware.Auth())
+	Gin.Use(middleware.Auth())
 	{
-		RouterGroupApp.Admin.InitAdmin(gin.Group(""))
+		RouterGroupApp.Admin.InitAdmin(Gin.Group(""))
 	}
-	gin.Group("")
+	Gin.Group("")
 	{
-		RouterGroupApp.Index.InitIndex(gin)
+		RouterGroupApp.Index.InitIndex(Gin)
 	}
-	return gin
+	return Gin
 }
