@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"hb_gin/common"
 	"hb_gin/config"
-	"hb_gin/initialize/mysql"
-	"hb_gin/initialize/redis"
+	Db "hb_gin/plugin/mysql"
+	Redis "hb_gin/plugin/redis"
 	"hb_gin/route"
 	"time"
 )
@@ -23,9 +23,9 @@ func Run() {
 	// 加载定时器
 	//common.NewCron()
 	// 加载mysql
-	mysql.NewMysql()
+	Db.NewMysql()
 	// 加载redis
-	redis.NewRedis()
+	Redis.NewRedis()
 	// 初始化路由
 	gin := route.Routers()
 	// 开始玩耍了
@@ -33,11 +33,10 @@ func Run() {
 }
 
 func runServer(gin *gin.Engine) {
-	s := initServer(":"+config.Conf.System.Addr,gin)
+	s := initServer(":"+config.Conf.System.Addr, gin)
 	// 写入错误日志
 	common.Log.WriteError(s.ListenAndServe().Error())
 }
-
 
 func initServer(address string, router *gin.Engine) server {
 	s := endless.NewServer(address, router)

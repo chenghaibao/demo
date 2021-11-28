@@ -2,7 +2,7 @@ package UserModel
 
 import (
 	"fmt"
-	"hb_gin/initialize/mysql"
+	mysql2 "hb_gin/plugin/mysql"
 )
 
 type User struct {
@@ -17,7 +17,7 @@ type User struct {
 
 //添加数据
 func (User *User) Add() {
-	err := mysql.Db.Create(User).Error
+	err := mysql2.Db.Create(User).Error
 	if err != nil {
 		fmt.Println("创建失败")
 	}

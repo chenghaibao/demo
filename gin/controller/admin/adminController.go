@@ -3,14 +3,14 @@ package adminControler
 import (
 	"context"
 	"fmt"
-	"hb_gin/initialize/redis"
+	mysql "hb_gin/plugin/mysql"
+	redis "hb_gin/plugin/redis"
 	"net/http"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
 
 	UserModel "hb_gin/Model/User"
-	"hb_gin/initialize/mysql"
 	AdminService "hb_gin/service/Admin"
 )
 

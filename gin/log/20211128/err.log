@@ -23,3 +23,4 @@
 2021-11-28 20:54:05|/Users/chenghaibao/Downloads/go/demo/gin/common/logger.go|21|accept tcp [::]:3561: use of closed network connection
 2021-11-28 20:54:45|/Users/chenghaibao/Downloads/go/demo/gin/common/logger.go|21|accept tcp [::]:3561: use of closed network connection
 2021-11-28 21:17:58|/Users/chenghaibao/Downloads/go/demo/gin/common/logger.go|21|accept tcp [::]:3561: use of closed network connection
+2021-11-28 21:20:42|/Users/chenghaibao/Downloads/go/demo/gin/common/logger.go|21|accept tcp [::]:3561: use of closed network connection
