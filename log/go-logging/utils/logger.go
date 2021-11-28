@@ -48,7 +48,7 @@ func NewLogger() *Logging {
 
 // 严重错误写入文件
 func writeLog(fileName, msg string) error {
-	path := "log/" + time.Now().Format("20060102") + "/"
+	path := "log/go-logging/" + time.Now().Format("20060102") + "/"
 	if !isExist(path) {
 		return createDir(path)
 	}

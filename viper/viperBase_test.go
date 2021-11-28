@@ -31,7 +31,7 @@ func Test(t *testing.T) {
 	//设置读取的配置文件
 	v.SetConfigName("test.yaml")
 	//添加读取的配置文件路径
-	v.AddConfigPath("./viper")
+	v.AddConfigPath("./")
 	//设置配置文件类型
 	v.SetConfigType("yaml")
 	// 配置文件名称(无扩展名)
