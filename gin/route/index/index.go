@@ -9,5 +9,6 @@ type IndexRouter struct {
 }
 
 func (s *IndexRouter) InitIndex(gin *gin.Engine) {
-	gin.GET("/ping", adminControler.GetPing)
+	var adminController = adminControler.AdminController{}
+	gin.GET("/ping", adminController.GetPing)
 }

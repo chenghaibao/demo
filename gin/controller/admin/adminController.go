@@ -14,7 +14,10 @@ import (
 	AdminService "hb_gin/service/Admin"
 )
 
-func GetPing(c *gin.Context) {
+type AdminController struct {
+}
+
+func (this *AdminController) GetPing(c *gin.Context) {
 	sum := AdminService.GetPing(2)
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
@@ -23,7 +26,7 @@ func GetPing(c *gin.Context) {
 	})
 }
 
-func AddUser(c *gin.Context) {
+func (this *AdminController) AddUser(c *gin.Context) {
 	user := &UserModel.User{
 		Nickname: "Nickname",
 		Birth:    "Birth",
@@ -40,7 +43,7 @@ func AddUser(c *gin.Context) {
 	})
 }
 
-func DeleteUser(c *gin.Context) {
+func (this *AdminController) DeleteUser(c *gin.Context) {
 	user := new(UserModel.User)
 	mysql.Db.Where("id = ?", 1).Delete(user)
 	c.JSON(http.StatusOK, gin.H{
@@ -50,7 +53,7 @@ func DeleteUser(c *gin.Context) {
 	})
 }
 
-func UpdateUser(c *gin.Context) {
+func (this *AdminController) UpdateUser(c *gin.Context) {
 	// 更改1
 	//mysql.Db.Model(&UserModel.User{}).Where("id = ?", 2).Update("nickname","test")
 	// 更改2
@@ -66,7 +69,7 @@ func UpdateUser(c *gin.Context) {
 	})
 }
 
-func SelectUser(c *gin.Context) {
+func (this *AdminController) SelectUser(c *gin.Context) {
 	var userArr []UserModel.User
 	mysql.Db.Find(&userArr)
 
@@ -84,7 +87,7 @@ func SelectUser(c *gin.Context) {
 	})
 }
 
-func FirstUser(c *gin.Context) {
+func (this *AdminController) FirstUser(c *gin.Context) {
 	user := new(UserModel.User)
 	mysql.Db.First(user, 1)
 	result := mysql.Db.Where("id = ?", 1).First(user).Value
@@ -95,8 +98,8 @@ func FirstUser(c *gin.Context) {
 	})
 }
 
-func SetRedis(c *gin.Context) {
-	ctx,cancel := context.WithCancel(context.Background())
+func (this *AdminController) SetRedis(c *gin.Context) {
+	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 	//redis.Redis.Set(ctx, "store", "12321", 0).Err()
 	fmt.Println(redis.Redis.Get(ctx, "store").Val())
