@@ -1,0 +1,4 @@
+# github.com/panjf2000/ants/v2 v2.4.6
+## explicit
+github.com/panjf2000/ants/v2
+github.com/panjf2000/ants/v2/internal
