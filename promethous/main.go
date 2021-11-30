@@ -42,13 +42,15 @@ var (
 		Help:       "the relationship between salary and population of beijing city",
 		Objectives: map[float64]float64{0.5: 0.05, 0.8: 0.01, 0.9: 0.01, 0.95: 0.001},
 	})
-	// beijing_salary  beijing_salary_count  beijing_salary_sum  横着请求数  纵请求时间
+	// 随着时间的推移，数据的展示形式
+	//beijing_salary  beijing_salary_count  beijing_salary_sum  横着请求数  纵请求时间
 
 	TemperatureHistogram = prometheus.NewHistogram(prometheus.HistogramOpts{
 		Name:    "beijing_temperature_second",
 		Help:    "The temperature of the beijing",
 		Buckets: prometheus.LinearBuckets(0, 2, 2),
 	})
+	// 请求所占用的百分比
 	// beijing_histogram_bucket  beijing_histogram_count  beijing_histogram_sum
 )
 
