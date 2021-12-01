@@ -19,5 +19,9 @@ func (s *AdminRouter) InitAdmin(Router *gin.RouterGroup) {
 		adminGroup.GET("/selectUser", adminController.SelectUser)
 		adminGroup.GET("/firstUser", adminController.FirstUser)
 		adminGroup.GET("/SetRedis", adminController.SetRedis)
+		adminGroup.GET("/sendChannel", adminController.SendChannel)
+		adminGroup.GET("/setMap", adminController.SetMap)
+		adminGroup.GET("/setWaitGroup", adminController.SetWaitGroup)
+		adminGroup.GET("/setStruct", adminController.SetStruct)
 	}
 }

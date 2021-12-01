@@ -2,12 +2,13 @@ package UserModel
 
 import (
 	"fmt"
+	_ "github.com/gookit/validate"
 	mysql2 "hb_gin/plugin/mysql"
 )
 
 type User struct {
 	Id       int         `gorm:"primary_key" json:"id"`
-	Nickname string      `json:"nickname,omitempty"`
+	Nickname string      `validate:"min=1,max=10" json:"nickname,omitempty"`
 	Birth    string      `json:"birth"`
 	Sex      string      `json:"sex"`
 	Height   int         `json:"height"`
