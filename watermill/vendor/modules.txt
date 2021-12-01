@@ -1,0 +1,15 @@
+# github.com/ThreeDotsLabs/watermill v1.1.1
+## explicit
+github.com/ThreeDotsLabs/watermill
+github.com/ThreeDotsLabs/watermill/internal
+github.com/ThreeDotsLabs/watermill/message
+github.com/ThreeDotsLabs/watermill/pubsub/gochannel
+github.com/ThreeDotsLabs/watermill/pubsub/sync
+# github.com/google/uuid v1.1.1
+github.com/google/uuid
+# github.com/lithammer/shortuuid/v3 v3.0.4
+github.com/lithammer/shortuuid/v3
+# github.com/oklog/ulid v1.3.1
+github.com/oklog/ulid
+# github.com/pkg/errors v0.8.1
+github.com/pkg/errors
