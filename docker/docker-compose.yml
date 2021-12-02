@@ -1,0 +1,27 @@
+version: "3"
+
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - "89:80"
+    working_dir: /data
+    container_name: nginx_test
+    restart: always
+
+    user: root
+    environment:
+      - RACK_ENV=development
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost" ]
+      interval: 3s
+      timeout: 2s
+    logging:
+      driver: json-file
+      options:
+        max-size: "200k"
+        max-file: "10"
+    labels:
+      author: "hb"
+    volumes:
+      - "/Users/chenghaibao/Downloads/go/demo/docker:/data"
