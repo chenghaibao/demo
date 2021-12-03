@@ -1,0 +1,73 @@
+# 两个大的阶段
+stages:
+  - build
+  - test
+
+# 初始化加载
+.auto_devops: &auto_devops |
+  # Auto DevOps variables and functions
+  [[ "$TRACE" ]] && set -x
+
+  function deploy() {
+    echo "Restoring Packages... $1"
+  }
+
+# 开始之前执行
+before_script:
+  - *auto_devops
+
+# build阶段执行的方法
+.build_job:
+  allow_failure: false
+  stage: build
+  environment:
+    name: master
+  script:
+    - echo "Release build..."
+    - deploy 333
+    - echo "213121"
+  except:
+    - tags
+
+# build
+.build_job:dev:
+  allow_failure: false
+  variables:
+    URL: "hb"
+  script:
+      - echo $HB
+      - echo "Hello world! $URL"
+  #image: nginx:latest
+
+# build_job阶段 执行两个内容
+build_job:
+  extends:
+    - .build_job
+    - .build_job:dev
+
+# test阶段
+test_job:
+  stage: test
+  allow_failure: false
+  needs: ["build_job"]
+  script:
+    - echo "Tests run..."
+
+# 最后job
+master_job:
+  stage: test
+  allow_failure: false
+  # 只存在 master分支
+  only:
+    refs:
+      - master
+  script:
+    - echo "Tests run..."
+  when: manual
+
+
+include:
+  - local: /include1.yml
+ # - project: 'mainto-tech-internal/ci-template'
+ #   ref: 'master'
+ #   file: '/golang/root.yaml'

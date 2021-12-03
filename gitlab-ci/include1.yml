@@ -1,0 +1,9 @@
+
+build_job:dev:
+  stage: build
+  environment:
+    name: dev
+  script:
+    - deploy 444
+  except:
+    - tags
