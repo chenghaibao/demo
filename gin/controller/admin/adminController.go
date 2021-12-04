@@ -18,6 +18,9 @@ import (
 type AdminController struct {
 }
 
+var mux sync2.Mutex
+var wg sync2.WaitGroup
+
 func (this *AdminController) GetPing(c *gin.Context) {
 	sum := AdminService.GetPing(2)
 	c.JSON(http.StatusOK, gin.H{
@@ -56,6 +59,8 @@ func (this *AdminController) DeleteUser(c *gin.Context) {
 
 func (this *AdminController) UpdateUser(c *gin.Context) {
 	// 更改1
+	defer mux.Unlock()
+	mux.Lock()
 	mysql.Db.Model(&UserModel.User{}).Where("id = ?", 2).Update("nickname", "test")
 	// 更改2
 	//var user UserModel.User
@@ -143,7 +148,6 @@ func (this *AdminController) SetMap(c *gin.Context) {
 }
 
 func (this *AdminController) SetWaitGroup(c *gin.Context) {
-	var wg sync2.WaitGroup
 	sum := 0
 	for i := 1; i < 100; i++ {
 		// 计数加 1
