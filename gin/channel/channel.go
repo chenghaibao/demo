@@ -1,6 +1,8 @@
 package channel
 
-func init(){
+var chanLength int32
+
+func init() {
 	// adminMessage
 	go func() {
 		NewAdminMessageChannel()

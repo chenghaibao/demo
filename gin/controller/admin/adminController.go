@@ -3,14 +3,13 @@ package adminControler
 import (
 	"context"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"hb_gin/channel"
 	mysql "hb_gin/plugin/mysql"
 	redis "hb_gin/plugin/redis"
 	"net/http"
 	"strconv"
 	sync2 "sync"
-
-	"github.com/gin-gonic/gin"
 
 	UserModel "hb_gin/Model/User"
 	AdminService "hb_gin/service/Admin"
@@ -171,6 +170,7 @@ func (this *AdminController) SetWaitGroup(c *gin.Context) {
 type VowelsFinder interface {
 	FindVowels()
 }
+
 // strcut 可以定义 string 切片 chan map interface 啥都行
 type MyString string
 
