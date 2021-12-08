@@ -1,0 +1,96 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hbnginx.fullname" . }}
+  labels:
+    {{- include "hbnginx.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hbnginx.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        myapp: hb
+        {{- include "hbnginx.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "hbnginx.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          volumeMounts:                       #--就是这一段使用configMap配置
+#              - mountPath: /usr/nginx/conf.d  #--将配置文件挂载到哪里
+#                name: config
+#              - mountPath: /usr/share/nginx/html              #--指定数据目录
+#                name: html
+              - mountPath: /data              #--指定数据目录
+                name: config
+              - mountPath: /usr/share/nginx/html              #--指定数据目录
+                name: task-pv-store
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+#        - name: data                              #指定数据目录创建
+#          emptyDir: { }
+        - name: config                           #指定config使用configMap
+          configMap:
+            name: nginx-config                #指定使用configMap中的nginx-config配置
+            items: #注：也可不指定items，那默认是nginx-config里的所有值都挂载
+              - key: nginx.conf                    #使用nginx-config配置的nginx.conf键里的内容
+                path: nginx.conf
+        - name: html                           #指定config使用configMap
+          configMap:
+            name: nginx-config                #指定使用configMap中的nginx-config配置
+            items: #注：也可不指定items，那默认是nginx-config里的所有值都挂载
+              - key: index.html                  #使用nginx-config配置的nginx.conf键里的内容
+                path: index.html
+        - name: task-pv-store                           #指定config使用configMap
+          persistentVolumeClaim:
+            claimName: test-claim
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+
+
+
+
+
+

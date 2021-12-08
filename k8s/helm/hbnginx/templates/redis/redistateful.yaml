@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+spec:
+  replicas: 1
+  serviceName: redis-service
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: bitnami/redis:latest
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - "exec redis-server /usr/local/etc/redis/redis.conf"
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 1
+              memory: 512Mi
+            limits:
+              cpu: 1
+              memory: 512Mi
+          volumeMounts:
+            - name: redis-config
+              mountPath: /usr/local/etc/redis
+      volumes:
+        - name: redis-config                           #指定config使用configMap
+          configMap:
+            name: redis-config              #指定使用configMap中的nginx-config配置
+            items: #注：也可不指定items，那默认是nginx-config里的所有值都挂载
+              - key: redis.conf                    #使用nginx-config配置的nginx.conf键里的内容
+                path: redis.conf

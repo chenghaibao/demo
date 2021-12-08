@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "hbnginx.fullname" . }}
+  name: hbnginx
+  labels:
+    {{- include "hbnginx.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.service.targetPort }}
+      protocol: TCP
+      name: hbnginx
+      nodePort: {{ .Values.service.nodePort }}
+  selector:
+    myapp: hb
+    {{- include "hbnginx.selectorLabels" . | nindent 4 }}
