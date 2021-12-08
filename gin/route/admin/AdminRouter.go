@@ -25,3 +25,11 @@ func (s *AdminRouter) InitAdmin(Router *gin.RouterGroup) {
 		adminGroup.GET("/setStruct", adminController.SetStruct)
 	}
 }
+
+func (s *AdminRouter) Admin(Router *gin.RouterGroup) {
+	adminGroup := Router.Group("admin")
+	var adminController = adminControler.AdminController{}
+	{
+		adminGroup.GET("/getUserToken", adminController.UserToken)
+	}
+}

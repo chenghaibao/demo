@@ -1,7 +1,5 @@
 package main
 
-import "hb_gin/initialize"
-
-func main(){
-	initialize.Run()
+func main() {
+	//initialize.Run()
 }

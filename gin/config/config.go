@@ -51,7 +51,7 @@ func jwt(vp *viper.Viper) *JWT {
 	jwt := &JWT{
 		SigningKey:  vp.GetString("jwt.signing-key"),
 		ExpiresTime: vp.GetInt64("jwt.expires-time"),
-		BufferTime:  vp.GetInt64("jwt.buffer-time"),
+		IssuedTime:  vp.GetInt64("jwt.issued-time"),
 		Issuer:      vp.GetString("jwt.issuer"),
 	}
 	return jwt

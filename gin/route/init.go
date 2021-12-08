@@ -23,6 +23,7 @@ func Routers() *gin.Engine {
 	}
 	Gin.Group("")
 	{
+		RouterGroupApp.Admin.Admin(Gin.Group(""))
 		RouterGroupApp.Index.InitIndex(Gin)
 	}
 	return Gin

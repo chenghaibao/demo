@@ -4,7 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt"
 	"hb_gin/channel"
+	"hb_gin/config"
 	mysql "hb_gin/plugin/mysql"
 	redis "hb_gin/plugin/redis"
 	"net/http"
@@ -192,5 +194,24 @@ func (this *AdminController) SetStruct(c *gin.Context) {
 		"code": 200,
 		"msg":  "success",
 		"data": true,
+	})
+}
+
+func (this *AdminController) UserToken(c *gin.Context) {
+	mySigningKey := []byte(config.Conf.JWT.SigningKey)
+	// Create the Claims
+	claims := &jwt.StandardClaims{
+		ExpiresAt: config.Conf.JWT.ExpiresTime,
+		Issuer:    config.Conf.JWT.Issuer,
+		IssuedAt:  config.Conf.JWT.IssuedTime,
+		Id:        "232", // 用户id
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	userToken, _ := token.SignedString(mySigningKey)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+		"msg":  "success",
+		"data": userToken,
 	})
 }
