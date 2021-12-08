@@ -53,8 +53,8 @@ mysql:
   port: '3306'
   dbName: 'gin'
   userName: 'root'
-#  password: 'root123456Hb@@'
-  password: ''
+  password: 'root123456Hb@@'
+#  password: ''
 
 # pgsql connect configuration
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://www.github.com/flipped-aurora/gin-vue-admin/server.com/docs/first）
