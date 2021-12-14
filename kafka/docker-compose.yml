@@ -1,0 +1,38 @@
+version: '2.2'
+services:
+  kafka-zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: kafka-zookeeper
+    restart: always
+    ports:
+      - "2188:2181"
+    networks:
+      - "kafka_net"
+  kafka:
+    image: wurstmeister/kafka
+    container_name: kafka
+    restart: always
+    hostname: kafka-hostname
+    ports:
+      - "32770:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 192.168.180.47
+      KAFKA_ZOOKEEPER_CONNECT: kafka-zookeeper:2181
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_ADVERTISED_PORT: 32770
+    networks:
+      - "kafka_net"
+  kafka-manage:
+    image: sheepkiller/kafka-manager
+    container_name: kafka-manage
+    restart: always
+    ports:
+      - "5001:9000"
+    environment:
+      ZK_HOSTS: kafka-zookeeper:2181
+      KAFKA_ZOOKEEPER_CONNECT: kafka-zookeeper:2181
+    networks:
+      - "kafka_net"
+networks:
+  kafka_net:
+    external: true

@@ -8,7 +8,6 @@ services:
     working_dir: /data
     container_name: nginx_test
     restart: always
-
     user: root
     environment:
       - RACK_ENV=development

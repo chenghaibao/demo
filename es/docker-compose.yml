@@ -1,0 +1,25 @@
+version: '2.2'
+
+services:
+  elasticsearch:
+    image: elasticsearch:7.2.0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    container_name: elasticsearch
+    environment:
+      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "discovery.type=single-node" #以单一节点模式启动
+    restart: always
+    volumes:
+      - /Users/chenghaibao/Downloads/go/demo/es/config/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml #配置文件挂载
+  kibana:
+    image: kibana:7.2.0
+    depends_on:
+      - elasticsearch
+    environment:
+      - "elasticsearch.hosts=http://127.0.0.1:9200"
+    ports:
+      - "5601:5601"
+    container_name: kibana
+    restart: always
