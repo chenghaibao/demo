@@ -8,7 +8,7 @@ services:
       - "9300:9300"
     container_name: elasticsearch
     environment:
-      - "cluster.name=elasticsearch" #设置集群名称为elasticsearch
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - "discovery.type=single-node" #以单一节点模式启动
     restart: always
     volumes:
