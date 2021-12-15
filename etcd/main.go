@@ -28,7 +28,7 @@ func main() {
 	}
 
 	defer cli.Close()
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	ctx, cancel = context.WithTimeout(context.Background(), time.Second)
 	resp, err := cli.Get(ctx, "q1mi")
 	cancel()
 	if err != nil {
