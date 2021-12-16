@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/reugn/go-traits"
+	"hb_traits/trait"
 )
 
 type inner struct {
@@ -14,10 +14,11 @@ type Name1 struct {
 }
 
 type test struct {
-	traits.Hasher    // 独特的哈希生成器的扩展
-	traits.Converter // 各种转换器的扩展
-	traits.Stringer  // fmt.Stringer实施扩展
-	traits.Validator //结构域验证扩展
+	trait.Stringer
+	//traits.Hasher    // 独特的哈希生成器的扩展
+	//traits.Converter // 各种转换器的扩展
+	  // fmt.Stringer实施扩展
+	//traits.Validator //结构域验证扩展
 	Name             Name1
 	Num              int    `json:"num"`
 	Str              string `json:"str" valid:"numeric"`
@@ -51,11 +52,11 @@ func main() {
 		Name:  Name1{"asda"},
 	}
 	obj.Name.echo()
-	traits.Init(&obj)
+	trait.Init(&obj)
 	fmt.Println(obj.String())
-	fmt.Println(obj.ToJSON())
-	fmt.Println(obj.Md5Hex())
-	fmt.Println(obj.Sha256Hex())
-	fmt.Println(obj.HashCode32())
-	fmt.Println(obj.Validate())
+	//fmt.Println(obj.ToJSON())
+	//fmt.Println(obj.Md5Hex())
+	//fmt.Println(obj.Sha256Hex())
+	//fmt.Println(obj.HashCode32())
+	//fmt.Println(obj.Validate())
 }

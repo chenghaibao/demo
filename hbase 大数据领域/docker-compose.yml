@@ -13,4 +13,4 @@ services:
       - 16010:16010
       - 16201:16201
       - 16301:16301
-    container_name: hbase
+    container_name: hbase 大数据领域
