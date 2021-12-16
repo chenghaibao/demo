@@ -30,6 +30,11 @@ github.com/prometheus/common/model
 github.com/prometheus/procfs
 github.com/prometheus/procfs/internal/fs
 github.com/prometheus/procfs/internal/util
+# github.com/sdming/goh v0.0.0-20130319082738-7071d6d7ab1f
+## explicit
+github.com/sdming/goh
+github.com/sdming/goh/Hbase
+github.com/sdming/goh/thrift
 # github.com/sirupsen/logrus v1.6.0
 github.com/sirupsen/logrus
 # github.com/tsuna/gohbase v0.0.0-20211207114337-de5a52263bf4
