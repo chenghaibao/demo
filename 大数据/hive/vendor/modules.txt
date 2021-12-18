@@ -1,0 +1,6 @@
+# git.apache.org/thrift.git v0.12.0
+git.apache.org/thrift.git/lib/go/thrift
+# github.com/dazheng/gohive v0.0.0-20190904024313-b1810177c8f2
+## explicit
+github.com/dazheng/gohive
+github.com/dazheng/gohive/inf
