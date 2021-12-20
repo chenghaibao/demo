@@ -33,6 +33,7 @@ func process(conn net.Conn) {
 			break
 		}
 		recvStr := string(buf[:n])
+		// 保存对应的文件加里面
 		fmt.Println("收到Client端发来的数据：", recvStr)
 		conn.Write([]byte("海宝")) // 发送数据
 	}

@@ -1,4 +1,4 @@
-package selectNode
+package node
 
 import (
 	"github.com/patrickmn/go-cache"
@@ -9,11 +9,11 @@ import (
 
 var mux sync.Mutex
 
-func SelectMaster() string {
+func getMaster() string {
 	if address, ok := isExistNode(); ok {
 		return address
 	} else {
-		return setNode()
+		return setMasterNode()
 	}
 }
 
@@ -28,7 +28,7 @@ func isExistNode() (string, bool) {
 
 }
 
-func setNode() string {
+func setMasterNode() string {
 	mux.Lock()
 	defer mux.Unlock()
 	// 地址config里面取

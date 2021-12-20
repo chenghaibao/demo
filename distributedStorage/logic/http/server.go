@@ -4,7 +4,10 @@ import "net/http"
 
 func NewInitHttp() {
 	http.ListenAndServe("127.0.0.1:9700", nil)
-	http.HandleFunc("/recive", testReceive)
+	http.HandleFunc("/setRecive", testReceive)
+	http.HandleFunc("/getRecive", testReceive)
+	http.HandleFunc("/deleteRecive", testReceive)
+	http.HandleFunc("/health", testReceive)
 }
 
 func testReceive(w http.ResponseWriter, r *http.Request) {

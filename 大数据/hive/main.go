@@ -16,7 +16,7 @@ func main() {
 	if err != nil {
 		fmt.Errorf("Connection.Exec error: %v", err)
 	}
-	rs, err := conn.Query("selectNode c1 from t limit 10")
+	rs, err := conn.Query("node c1 from t limit 10")
 	if err != nil {
 		fmt.Errorf("Connection.Query error: %v", err)
 	}
