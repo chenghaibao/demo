@@ -2,6 +2,9 @@ package node
 
 import (
 	"fmt"
+	"github.com/patrickmn/go-cache"
+	cache2 "hb_distributeStorage/logic/cache"
+	"hb_distributeStorage/logic/tcp"
 	"hb_distributeStorage/utils"
 )
 
@@ -10,23 +13,81 @@ func SelectNode() {
 	array := []string{"127.0.0.1:9700", "127.0.0.1:9800", "127.0.0.1:9900"}
 	address, _ := utils.Random(array, 1)
 	// 请求子节点（是否可以访问）
-
+	ok := utils.IsTcpClient(address)
+	if !ok {
+		tcp.SendClient(address)
+		newAddress := utils.RemoveParam(array, utils.Strval(address))
+		for _,v := range newAddress{
+			ok = utils.IsTcpClient(v)
+			if ok{
+				address = v
+				break
+			}
+			// 不严谨 没有做所有节点都不存在的情况
+		}
+	}
 	// 发送value
-
-	//curl address
-	fmt.Println(address)
+	fmt.Println(utils.GetCurl(utils.Strval(address)+"?aa=13"))
 }
 
-func addNode() {
+func AddNode() {
 	// 查看节点是否已加入
-	array := []string{"127.0.0.1:9700", "127.0.0.1:9800", "127.0.0.1:9900"}
+	array := []string{"127.0.0.1:9700", "127.0.0.1:set0", "127.0.0.1:9900"}
 
-	// 没加入则加入节点   // 否则不处理
-	address, _ := utils.Random(array, 1)
-	// 请求子节点（是否可以访问）
+	// 判断所有子节点是否能访问
 
-	// 发送value
+	// 访问更新cache
+	nodeAddress := setNodeAddress()
+	cache2.LocalCache.Set("nodeAddress", nodeAddress, cache.NoExpiration)
+	// 发送自己节点信息
+	for _, v := range array {
+		tcp.SendClient(v)
+		// 保存主节点
+	}
 
-	//curl address
-	fmt.Println(address)
+}
+
+//
+func setNodeAddress() map[string]interface{} {
+	nodeMap := make(map[string]interface{})
+	if nodeAddress, ok := cache2.LocalCache.Get("nodeAddress"); ok {
+		for _, v := range array {
+			if ok, _ := utils.MapKeyExist(nodeAddress.(map[string]interface{}), v); !ok {
+				nodeAddress.(map[string]interface{})[v] = v
+			}
+		}
+		return nodeAddress.(map[string]interface{})
+	} else {
+		for _, v := range array {
+			nodeMap[v] = v
+		}
+		return nodeMap
+	}
+}
+
+func SyncNodeAddress(address string) {
+	nodeAddress, _ := cache2.LocalCache.Get("nodeAddress")
+	if ok, _ := utils.MapKeyExist(nodeAddress.(map[string]interface{}), address); !ok {
+		nodeAddress.(map[string]interface{})[address] = address
+	}
+	cache2.LocalCache.Set("nodeAddress", nodeAddress.(map[string]interface{}), cache.NoExpiration)
+}
+
+func SyncDeleteAddress(address string) {
+	nodeAddress, _ := cache2.LocalCache.Get("nodeAddress")
+	if ok, _ := utils.MapKeyExist(nodeAddress.(map[string]interface{}), address); !ok {
+		delete(nodeAddress.(map[string]interface{}), address)
+	}
+	cache2.LocalCache.Set("nodeAddress", nodeAddress.(map[string]interface{}), cache.NoExpiration)
+}
+
+func SyncMasterAddress(masterAddress string) {
+	// 设置主节点信息
+	cache2.LocalCache.Set("masterAddress", masterAddress, cache.NoExpiration)
+	// 删除子节点
+	nodeAddress, _ := cache2.LocalCache.Get("nodeAddress")
+	if ok, _ := utils.MapKeyExist(nodeAddress.(map[string]interface{}), masterAddress); ok {
+		delete(nodeAddress.(map[string]interface{}), masterAddress)
+	}
+	cache2.LocalCache.Set("nodeAddress", nodeAddress.(map[string]interface{}), cache.NoExpiration)
 }

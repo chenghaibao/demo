@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"math/rand"
+	"net"
 	"strconv"
 	strings2 "strings"
 	"time"
@@ -119,3 +120,23 @@ func Strval(value interface{}) string {
 
 	return key
 }
+
+// map是否存在某个建
+func MapKeyExist(mapValue map[string]interface{}, key string) (bool, interface{}) {
+	if value, ok := mapValue[key]; ok {
+		return true, value
+	} else {
+		return false, nil
+	}
+}
+
+func IsTcpClient(address string) bool{
+	conn, err := net.Dial("tcp4", address)
+	defer conn.Close()
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+

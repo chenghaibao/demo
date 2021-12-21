@@ -3,6 +3,7 @@ package node
 import (
 	"github.com/patrickmn/go-cache"
 	cache2 "hb_distributeStorage/logic/cache"
+	"hb_distributeStorage/logic/tcp"
 	"hb_distributeStorage/utils"
 	"sync"
 )
@@ -38,12 +39,13 @@ func setMasterNode() string {
 	// 通知删除某个节点
 	array1 := utils.RemoveParam(array, utils.Strval(address))
 
-	// 请求当前地址的健康接口，判断是否可以访问 3次
+	// 请求当前地址的健康接口
 	//	curl.get
 	// 不能接着剔除
 	for _, v := range array1 {
 		address, _ = utils.Random(array, 1)
-		//	请求当前地址的健康接口，判断是否可以访问 3次
+		//	请求当前地址的健康接口
+
 		//  可以返回
 		address = v
 		break
@@ -65,9 +67,11 @@ func synchronous() {
 	masterAddress, _ := cache2.LocalCache.Get("masterAddress")
 	array := []string{"127.0.0.1:9700", "127.0.0.1:9800", "127.0.0.1:9900"}
 	synchronousArray := utils.RemoveParam(array, utils.Strval(masterAddress))
-	for _, v := range synchronousArray {
-		go func(v string) {
+	for range synchronousArray {
+		go func(value string) {
 			// 同步node选举 到个节点 tcp链接传输
-		}(v)
+			tcp.SendClient(value)
+		}(utils.Strval(masterAddress))
 	}
 }
+
