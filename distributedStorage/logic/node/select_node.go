@@ -3,9 +3,11 @@ package node
 import (
 	"fmt"
 	"github.com/patrickmn/go-cache"
+	"hb_distributeStorage/config"
 	cache2 "hb_distributeStorage/logic/cache"
 	"hb_distributeStorage/logic/tcp"
 	"hb_distributeStorage/utils"
+	"strings"
 )
 
 func SelectNode() {
@@ -17,9 +19,9 @@ func SelectNode() {
 	if !ok {
 		tcp.SendClient(address)
 		newAddress := utils.RemoveParam(array, utils.Strval(address))
-		for _,v := range newAddress{
+		for _, v := range newAddress {
 			ok = utils.IsTcpClient(v)
-			if ok{
+			if ok {
 				address = v
 				break
 			}
@@ -27,15 +29,13 @@ func SelectNode() {
 		}
 	}
 	// 发送value
-	fmt.Println(utils.GetCurl(utils.Strval(address)+"?aa=13"))
+	fmt.Println(utils.GetCurl(utils.Strval(address) + "?aa=13"))
 }
 
 func AddNode() {
 	// 查看节点是否已加入
-	array := []string{"127.0.0.1:9700", "127.0.0.1:set0", "127.0.0.1:9900"}
-
+	array := strings.Split(config.Config.Cluster, ",")
 	// 判断所有子节点是否能访问
-
 	// 访问更新cache
 	nodeAddress := setNodeAddress()
 	cache2.LocalCache.Set("nodeAddress", nodeAddress, cache.NoExpiration)
@@ -50,6 +50,7 @@ func AddNode() {
 //
 func setNodeAddress() map[string]interface{} {
 	nodeMap := make(map[string]interface{})
+	array := strings.Split(config.Config.Cluster, ",")
 	if nodeAddress, ok := cache2.LocalCache.Get("nodeAddress"); ok {
 		for _, v := range array {
 			if ok, _ := utils.MapKeyExist(nodeAddress.(map[string]interface{}), v); !ok {

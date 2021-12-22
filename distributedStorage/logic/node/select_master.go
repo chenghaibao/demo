@@ -2,9 +2,11 @@ package node
 
 import (
 	"github.com/patrickmn/go-cache"
+	"hb_distributeStorage/config"
 	cache2 "hb_distributeStorage/logic/cache"
 	"hb_distributeStorage/logic/tcp"
 	"hb_distributeStorage/utils"
+	"strings"
 	"sync"
 )
 
@@ -65,7 +67,7 @@ func setMasterNode() string {
 func synchronous() {
 	// 地址config里面取
 	masterAddress, _ := cache2.LocalCache.Get("masterAddress")
-	array := []string{"127.0.0.1:9700", "127.0.0.1:9800", "127.0.0.1:9900"}
+	array := strings.Split(config.Config.Cluster, ",")
 	synchronousArray := utils.RemoveParam(array, utils.Strval(masterAddress))
 	for range synchronousArray {
 		go func(value string) {
@@ -74,4 +76,3 @@ func synchronous() {
 		}(utils.Strval(masterAddress))
 	}
 }
-
