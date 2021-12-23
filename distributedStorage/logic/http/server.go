@@ -17,6 +17,7 @@ func testReceive(w http.ResponseWriter, r *http.Request) {
 	// 存在则通过master 随机访问节点进行处理
 
 	// 保存到副本里面
+
 	// tcp 同步数据到各个节点去
 
 	// 保存master

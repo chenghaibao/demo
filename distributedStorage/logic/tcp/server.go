@@ -2,12 +2,16 @@ package tcp
 
 import (
 	"bufio"
+	"encoding/json"
 	"fmt"
+	"hb_distributeStorage/config"
+	cache2 "hb_distributeStorage/logic/cache"
+	"hb_distributeStorage/utils"
 	"net"
 )
 
 func NewInitTcp() {
-	listen, err := net.Listen("tcp", "127.0.0.1:9700")
+	listen, err := net.Listen("tcp", config.Config.Host+":"+config.Config.Port)
 	if err != nil {
 		fmt.Println("Listen() failed, err: ", err)
 		return
@@ -35,6 +39,35 @@ func process(conn net.Conn) {
 		recvStr := string(buf[:n])
 		// 保存对应的文件加里面
 		fmt.Println("收到Client端发来的数据：", recvStr)
-		conn.Write([]byte("海宝")) // 发送数据
+
+		if string(buf[:9]) == "getMaster" {
+			// 同步master节点信息
+			aa, _ := cache2.LocalCache.Get("masterAddress")
+			conn.Write([]byte(utils.Strval(aa)))
+		} else if string(buf[:8]) == "NAddress" {
+			// 同步节点信息
+			syncNodeAddress(string(buf[8:]))
+			aa, _ := cache2.LocalCache.Get("nodeAddress")
+			mjson, _ := json.Marshal(utils.Strval(aa))
+			conn.Write(mjson)
+		} else {
+			conn.Write([]byte("success"))
+		}
+		//else if string(buf[:8]) == "MAddress" {
+		//	// 同步master节点信息
+		//	syncMasterAddress(string(buf[:16]))
+		//} else if string(buf[:8]) == "DAddress" {
+		//	// 同步master节点信息
+		//	syncDeleteAddress(string(buf[:16]))
+		//}
 	}
+}
+
+func IsTcpClient(address string) bool {
+	conn, err := net.Dial("tcp4", address)
+	if err != nil {
+		return false
+	}
+	defer conn.Close()
+	return true
 }

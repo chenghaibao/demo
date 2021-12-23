@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"github.com/patrickmn/go-cache"
 	"hb_distributeStorage/config"
 	cache2 "hb_distributeStorage/logic/cache"
@@ -12,8 +13,9 @@ import (
 
 var mux sync.Mutex
 
-func getMaster() string {
+func GetMaster() string {
 	if address, ok := isExistNode(); ok {
+		fmt.Println("getMaster", address)
 		return address
 	} else {
 		return setMasterNode()
@@ -23,44 +25,52 @@ func getMaster() string {
 func isExistNode() (string, bool) {
 	address, ok := cache2.LocalCache.Get("masterAddress")
 	// 请求master健康检查接口是否成功
-	if true {
+	if ok {
 		return utils.Strval(address), ok
 	} else {
+		// 获取远程节点的master
+		array := strings.Split(config.Config.Cluster, ",")
+		for _, v := range array {
+			masterAddress := tcp.SendClient(v, "getMaster")
+			if masterAddress != "success" {
+				cache2.LocalCache.Set("masterAddress", masterAddress, cache.NoExpiration)
+				return utils.Strval(address), ok
+			}
+			// 不严谨 没有做所有节点都不存在的情况
+		}
 		return "", false
 	}
-
 }
 
 func setMasterNode() string {
 	mux.Lock()
 	defer mux.Unlock()
 	// 地址config里面取
-	array := []string{"127.0.0.1:9700", "127.0.0.1:9800", "127.0.0.1:9900"}
+	array := strings.Split(config.Config.Cluster, ",")
 	address, _ := utils.Random(array, 1)
-
-	// 通知删除某个节点
-	array1 := utils.RemoveParam(array, utils.Strval(address))
-
-	// 请求当前地址的健康接口
-	//	curl.get
-	// 不能接着剔除
-	for _, v := range array1 {
-		address, _ = utils.Random(array, 1)
-		//	请求当前地址的健康接口
-
-		//  可以返回
-		address = v
-		break
+	if address == "" {
+		cache2.LocalCache.Set("masterAddress", config.Config.Host+":"+config.Config.Port, cache.NoExpiration)
+	} else {
+		// 请求当前地址的健康接口
+		ok := tcp.IsTcpClient(address)
+		if !ok {
+			tcp.SendClient(address, "DAddress")
+			newAddress := utils.RemoveParam(array, utils.Strval(address))
+			for _, v := range newAddress {
+				ok = tcp.IsTcpClient(v)
+				if ok {
+					address = v
+					break
+				}
+				// 不严谨 没有做所有节点都不存在的情况
+			}
+		}
+		// 通知删除某个节点
+		utils.RemoveParam(array, address)
+		cache2.LocalCache.Set("masterAddress", address, cache.NoExpiration)
 	}
-
-	// 存入配置文件
-	// 通知删除某个节点
-	utils.RemoveParam(array, address)
-	cache2.LocalCache.Set("masterAddress", address, cache.NoExpiration)
-
 	// 同步选举数据
 	synchronous()
-
 	return address
 }
 
@@ -72,7 +82,7 @@ func synchronous() {
 	for range synchronousArray {
 		go func(value string) {
 			// 同步node选举 到个节点 tcp链接传输
-			tcp.SendClient(value)
+			tcp.SendClient(value, "MAddress")
 		}(utils.Strval(masterAddress))
 	}
 }

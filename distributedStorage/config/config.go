@@ -28,10 +28,15 @@ func NewConfig() *Conf {
 	if err := v.ReadInConfig(); err != nil {
 		fmt.Printf("err:%s\n", err)
 	}
-
+	var Cluster string
+	if v.Get("address") == nil {
+		Cluster = utils.Strval(v.Get("host")) + ":" + utils.Strval(v.Get("port"))
+	} else {
+		Cluster = utils.Strval(v.Get("address"))
+	}
 	Config = &Conf{
 		Host:    utils.Strval(v.Get("host")),
-		Cluster: utils.Strval(v.Get("cluster")),
+		Cluster: Cluster,
 		Port:    utils.Strval(v.Get("port")),
 	}
 	return Config
