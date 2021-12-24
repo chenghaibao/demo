@@ -7,12 +7,14 @@ import (
 	cache2 "hb_distributeStorage/logic/cache"
 	"hb_distributeStorage/logic/tcp"
 	"hb_distributeStorage/utils"
+	"hb_distributeStorage/work"
 	"strings"
 	"sync"
 )
 
 var mux sync.Mutex
 
+// 通过
 func GetMaster() string {
 	if address, ok := isExistNode(); ok {
 		fmt.Println("getMaster", address)
@@ -22,6 +24,7 @@ func GetMaster() string {
 	}
 }
 
+// 通过
 func isExistNode() (string, bool) {
 	address, ok := cache2.LocalCache.Get("masterAddress")
 	// 请求master健康检查接口是否成功
@@ -42,6 +45,7 @@ func isExistNode() (string, bool) {
 	}
 }
 
+// 通过
 func setMasterNode() string {
 	mux.Lock()
 	defer mux.Unlock()
@@ -54,7 +58,7 @@ func setMasterNode() string {
 		// 请求当前地址的健康接口
 		ok := tcp.IsTcpClient(address)
 		if !ok {
-			tcp.SendClient(address, "DAddress")
+			work.Pool.Pool <- address + "DAddress"
 			newAddress := utils.RemoveParam(array, utils.Strval(address))
 			for _, v := range newAddress {
 				ok = tcp.IsTcpClient(v)

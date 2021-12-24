@@ -10,6 +10,7 @@ import (
 	"net"
 )
 
+// 通过
 func NewInitTcp() {
 	listen, err := net.Listen("tcp", config.Config.Host+":"+config.Config.Port)
 	if err != nil {
@@ -23,11 +24,13 @@ func NewInitTcp() {
 			continue
 		}
 		go process(conn) // 启动一个goroutine来处理客户端的连接请求
+
 	}
 }
 
 func process(conn net.Conn) {
-	defer conn.Close() // 关闭连接
+	defer conn.Close()
+	// 关闭连接
 	for {
 		reader := bufio.NewReader(conn)
 		var buf [128]byte
@@ -39,19 +42,22 @@ func process(conn net.Conn) {
 		recvStr := string(buf[:n])
 		// 保存对应的文件加里面
 		fmt.Println("收到Client端发来的数据：", recvStr)
-
+		// 通过
 		if string(buf[:9]) == "getMaster" {
 			// 同步master节点信息
 			aa, _ := cache2.LocalCache.Get("masterAddress")
-			conn.Write([]byte(utils.Strval(aa)))
+			_, err = conn.Write([]byte(utils.Strval(aa)))
 		} else if string(buf[:8]) == "NAddress" {
 			// 同步节点信息
 			syncNodeAddress(string(buf[8:]))
 			aa, _ := cache2.LocalCache.Get("nodeAddress")
 			mjson, _ := json.Marshal(utils.Strval(aa))
-			conn.Write(mjson)
+			_, err = conn.Write(mjson)
 		} else {
-			conn.Write([]byte("success"))
+			_, err = conn.Write([]byte("success"))
+		}
+		if err != nil {
+			break
 		}
 		//else if string(buf[:8]) == "MAddress" {
 		//	// 同步master节点信息

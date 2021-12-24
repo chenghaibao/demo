@@ -15,19 +15,20 @@ func SendClient(address string, input string) string {
 		fmt.Println("err : ", err)
 		return ""
 	}
-	defer conn.Close() // 关闭TCP连接
 	//for {
 	inputInfo := strings.Trim(input+address, "\r\n")
 	_, err = conn.Write([]byte(inputInfo)) // 发送数据
 	if err != nil {
+		conn.Close() // 关闭TCP连接
 		return ""
 	}
 	buf := [4096]byte{}
 	n, err := conn.Read(buf[:])
-	//if err != nil {
-	//	fmt.Println("recv failed, err:", err)
-	//	return ""
-	//}
+	if err != nil {
+		conn.Close()
+		fmt.Println("recv failed, err:", err)
+		return ""
+	}
 	//if string(buf[:8]) == "NAddress" {
 	//	// 同步节点信息
 	//	syncNodeAddress(string(buf[:16]))
