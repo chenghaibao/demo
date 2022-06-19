@@ -20,8 +20,6 @@ func NewHttpGatewayCommand() *cobra.Command {
 	return cmd
 }
 
-
-
-func runHttpGateway()  {
+func runHttpGateway() {
 	fmt.Println("12321")
 }
