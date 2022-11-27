@@ -5,6 +5,7 @@ services:
     container_name: rabbitmq
     restart: always
     hostname: my-rabbitmq
+    network:host
     ports:
       - 15672:15672
       - 5672:5672

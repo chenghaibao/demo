@@ -7,7 +7,7 @@ services:
     hostname: prometheus
     restart: always
     volumes:
-      - /usr/local/src/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - /Users/chenghaibao/Downloads/go/demo/promethous/prometheus.yml:/etc/prometheus/prometheus.yml
     ports:
       - "9090:9090"
   grafana:

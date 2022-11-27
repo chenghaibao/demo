@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/streadway/amqp"
 	"hb_rabbit_mq/lib"
 	"log"
@@ -26,14 +27,15 @@ func main() {
 	// 声明或者创建一个队列用来保存消息
 	q, err := ch.QueueDeclare(
 		// 队列名称
-		"simple:queue", // name
-		false,          // durable
-		false,          // delete when unused
-		false,          // exclusive
-		false,          // no-wait
-		nil,            // arguments
+		"test", // name
+		false,  // durable
+		false,  // delete when unused
+		false,  // exclusive
+		false,  // no-wait
+		nil,    // arguments
 	)
-	lib.ErrorHanding(err, "Failed to declare a queue")
+	fmt.Println(err)
+	//lib.ErrorHanding(err, "Failed to declare a queue")
 	data := simpleDemo{
 		Name: "Tom",
 		Addr: "Beijing",

@@ -8,14 +8,11 @@ import (
 // RabbitMQ连接函数
 func RabbitMQConn() (conn *amqp.Connection, err error) {
 	// RabbitMQ分配的用户名称
-	var user string = "rabbitmq"
+	var user string = "MjphbXFwLWNuLTdtejJpNWtqajAwNTpMVEFJNXRNY0hENVNHbWR6Mzl3WE1MMWE="
 	// RabbitMQ用户的密码
-	var pwd string = "rabbitmq"
-	// RabbitMQ Broker 的ip地址
-	var host string = "127.0.0.1"
-	// RabbitMQ Broker 监听的端口
-	var port string = "5672"
-	url := "amqp://" + user + ":" + pwd + "@" + host + ":" + port + "/"
+	var pwd string = "NjUyMTNCNTIwMDgxNTM0RDc2MUNGNzMwMEUyNUEwMzgwNENCRkYyMDoxNjQwOTMzMDA0OTc0"
+
+	url := "amqp://" + user + ":" + pwd + "@" + "amqp-cn-7mz2i5kjj005.mq-amqp.cn-hangzhou-249959-a.aliyuncs.com" + "/test"
 	// 新建一个连接
 	conn, err = amqp.Dial(url)
 	// 返回连接和错误

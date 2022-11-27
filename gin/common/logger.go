@@ -26,7 +26,7 @@ func NewLogger() *Logging {
 	logger := logging.MustGetLogger("hb")
 
 	format := logging.MustStringFormatter(
-		`%{color}%{time:15:04:05.000} %{shortfunc} ▶ %{level:.4s} %{id:03x}%{color:reset} %{message}`,
+		`%{time:2006-01-02 15:04:05.000} %{longfunc}[%{shortfile}] ▶ [%{level:.4s}] %{message}`,
 	)
 	// os.Stderr  获取默认的日志
 	backend := logging.NewLogBackend(os.Stderr, "hb", 0)

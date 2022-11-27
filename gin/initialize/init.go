@@ -21,7 +21,7 @@ func Run() {
 	// 加载日志
 	common.NewLogger()
 	// 加载定时器
-	//common.NewCron()
+	common.NewCron()
 	// 加载mysql
 	Db.NewMysql()
 	// 加载redis

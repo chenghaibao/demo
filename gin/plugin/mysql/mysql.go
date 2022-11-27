@@ -18,7 +18,11 @@ func NewMysql() {
 	if err != nil {
 		panic(err)
 	}
-	db.DB().SetMaxIdleConns(10)
+
+	//  用于设置连接池中空闲连接的最大数量
+	db.DB().SetMaxIdleConns(50)
+
+	//  设置打开数据库连接的最大数量
 	db.DB().SetMaxOpenConns(100)
 	db.SingularTable(true)
 	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
