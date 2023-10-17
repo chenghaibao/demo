@@ -15,4 +15,8 @@ func main() {
 	//	println(f.Func.String())
 	//	println("---------")
 	//}
+
+	// todo 反射,容器，Iop 切面，
+	// todo 不入侵业务    专注于业务不关注于框架
+	// todo 微服务 先拆成服务 ，在进行优化
 }

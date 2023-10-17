@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress  
+metadata:
+  name: ingress-host-bar
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "hello.flyfish.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: hello-server
+            port:
+              number: 8000
+  - host: "demo.flyfish.com"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"  # 把请求会转给下面的服务，下面的服务一定要能处理这个路径，不能处理就是404
+        backend:
+          service:
+            name: nginx-demo  ## java，比如使用路径重写，去掉前缀nginx
+            port:
+              number: 8000
